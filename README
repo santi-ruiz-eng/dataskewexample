@@ -1,0 +1,23 @@
+# Data Skew in Flink Example Project
+
+This is the project I used to exemplify the issue explored in this article: https://medium.com/@sanr_71172/dealing-with-data-skew-in-flink-b7e4c82c35ef
+
+To run it you will need both Scala and Python installed. Also, we are using Flink 1.13 as it's the current version that AWS Kinesis supports.
+
+### Preparation
+
+You must first generate some synthetic data that Flink will use to run on. This is done by executing the script "data_generator.py". You can customize the amount of records inside the script itself.
+
+Once this is done, you should fill in the absolute path to the generated .csv file that contains the data (in src/resources) inside the two jobs used in this example: SkewedJob.scala and FixedJob.scala
+
+### How to run
+
+Once the preparation is done, it is recommended to run the project in a local cluster with some amount of parallelization (I used 4) to really see the benefit of the Bundle Operator.
+
+I recommend this guide to set up the cluster: https://nightlies.apache.org/flink/flink-docs-release-1.13/docs/try-flink/local_installation/
+
+Once you have the cluster up, you can build the project with:
+sbt clean assembly
+
+And then run the desired job on the cluster with:
+flink run -c net.sitecore.SkewedJob target/scala-2.11/DataSkewExample-assembly-0.1-SNAPSHOT.jar
